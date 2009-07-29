@@ -1,9 +1,14 @@
 require 'pp'
+require 'yaml'
 
 def write_outfile(guesses, outfile = 'results.txt')
   File.open(outfile, 'w+') do |f|
     guesses.each do |uid, ids|
-      f.puts "#{uid}:#{ids.join(',')}"
+      if ids.is_a?(Hash)
+        f.puts [uid, ids.to_a.flatten.compact.map{|k| k.to_a.compact.join(';')}.join(',') ].join(':')
+      else
+        f.puts "#{uid}:#{ids.join(',')}"
+      end
     end
   end
 end
@@ -14,7 +19,13 @@ def read_outfile(outfile)
   lines.each do |line|
     line = line.strip
     (uid, rids) = line.split(':')
-    rid_arr = rids.split(',').map { |id| id.to_i } rescue []
+    rid_arr = rids.split(',').map do |id| 
+      if id.match ';'
+        {id.split(';')[0] => id.split(';')[1]}
+      else
+        id.to_i 
+      end
+    end rescue []
     guesses[uid.to_i] = rid_arr
   end
   guesses
