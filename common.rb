@@ -5,7 +5,7 @@ def write_outfile(guesses, outfile = 'results.txt')
   File.open(outfile, 'w+') do |f|
     guesses.each do |uid, ids|
       if ids.is_a?(Hash)
-        f.puts [uid, ids.to_a.flatten.compact.map{|k| k.to_a.compact.join(';')}.join(',') ].join(':')
+        f.puts [uid, ids.to_a.compact.map{|k| k.to_a.compact.join(';')}.join(',') ].join(':')
       else
         f.puts "#{uid}:#{ids.join(',')}"
       end
