@@ -3,6 +3,9 @@ require 'common'
 tests = File.read('test.txt')
 (users, repos) = get_users_repos
 usermap = read_outfile('usermap.txt')
+user_lang_map = read_outfile('user_lang_map.txt')
+project_lang_map = read_outfile('lang.txt')
+
 
 guesses = {}
 
@@ -19,6 +22,8 @@ tests.split("\n").each do |uid|
     users[compid].each do |repoid|
       common[repoid] ||= 0
       common[repoid] += 1
+      next if project_lang_map[repoid].nil? or user_lang_map[uid].nil?
+      common[repoid] += (project_lang_map[repoid].collect{|e|e.keys.first} & user_lang_map[uid].collect{|e|e.keys.first}).size
     end
   end
 
