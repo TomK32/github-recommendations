@@ -1,3 +1,5 @@
+# creates the neighborhood space
+
 require 'common'
 
 (users, repos) = get_users_repos
