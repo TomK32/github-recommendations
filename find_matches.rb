@@ -13,6 +13,7 @@ time = Time.now()
 
 tests.split("\n").each do |uid|
   uid = uid.strip.to_i
+  puts uid
   next if !usermap[uid]
   
   common = {}
@@ -23,7 +24,16 @@ tests.split("\n").each do |uid|
       common[repoid] ||= 0
       common[repoid] += 1
       next if project_lang_map[repoid].nil? or user_lang_map[uid].nil?
-      common[repoid] += (project_lang_map[repoid].collect{|e|e.keys.first} & user_lang_map[uid].collect{|e|e.keys.first}).size
+      project_lang_map[repoid].each_pair do |language, lines|
+        begin
+          next if user_lang_map[uid].empty? or user_lang_map[uid][language].nil?
+        rescue Exception => ex
+          puts user_lang_map[uid].inspect
+          puts language.inspect
+          exit(0)
+        end
+        common[repoid] += ((lines.to_i + 2) / (user_lang_map[uid][language].to_i + 1)).to_i
+      end
     end
   end
 
@@ -31,7 +41,6 @@ tests.split("\n").each do |uid|
   friends = friends.map { |a| a[0] }
   guesses[uid] = friends
   
-  puts uid
 end
 
 puts Time.now() - time

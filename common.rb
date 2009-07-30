@@ -1,6 +1,7 @@
 require 'pp'
 require 'yaml'
 
+
 def write_outfile(guesses, outfile = 'results.txt')
   File.open(outfile, 'w+') do |f|
     guesses.each do |uid, ids|
@@ -13,20 +14,25 @@ def write_outfile(guesses, outfile = 'results.txt')
   end
 end
 
-def read_outfile(outfile)
+def read_outfile(outfile, num_of_lines = false)
   guesses = {}
   lines = File.readlines(outfile)
+  if num_of_lines
+    lines = lines[0..(num_of_lines)]
+  end
   lines.each do |line|
     line = line.strip
     (uid, rids) = line.split(':')
-    rid_arr = rids.split(',').map do |id| 
-      if id.match ';'
-        {id.split(';')[0] => id.split(';')[1]}
-      else
-        id.to_i 
+    rid_result = if rids.match(/;/)
+      result = {}
+      rids.split(',').map do |entry| 
+        result[entry.split(';')[0]] = entry.split(';')[1]
       end
+      result
+    else
+      rids.split(',').map {|id| id.to_i }
     end rescue []
-    guesses[uid.to_i] = rid_arr
+    guesses[uid.to_i] = rid_result
   end
   guesses
 end
