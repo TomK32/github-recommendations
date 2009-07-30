@@ -18,7 +18,7 @@ def read_outfile(outfile, num_of_lines = false)
   guesses = {}
   lines = File.readlines(outfile)
   if num_of_lines
-    lines = lines[0..(num_of_lines)]
+    lines = lines[(lines.size / 2 - num_of_lines)..(lines.size / 2 + num_of_lines)]
   end
   lines.each do |line|
     line = line.strip

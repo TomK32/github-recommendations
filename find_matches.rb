@@ -2,7 +2,7 @@ require 'common'
 
 tests = File.read('test.txt')
 (users, repos) = get_users_repos
-usermap = read_outfile('usermap.txt', 500)
+usermap = read_outfile('usermap.txt', 1000)
 user_lang_map = read_outfile('user_lang_map.txt')
 project_lang_map = read_outfile('lang.txt')
 
