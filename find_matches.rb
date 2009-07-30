@@ -2,7 +2,7 @@ require 'common'
 
 tests = File.read('test.txt')
 (users, repos) = get_users_repos
-usermap = read_outfile('usermap.txt')
+usermap = read_outfile('usermap.txt', 100)
 user_lang_map = read_outfile('user_lang_map.txt')
 project_lang_map = read_outfile('lang.txt')
 
@@ -32,7 +32,7 @@ tests.split("\n").each do |uid|
           puts language.inspect
           exit(0)
         end
-        common[repoid] += ((lines.to_i + 2) / (user_lang_map[uid][language].to_i + 1)).to_i
+        common[repoid] += (user_lang_map[uid][language].to_i + 1) / (lines.to_i + 1)
       end
     end
   end
