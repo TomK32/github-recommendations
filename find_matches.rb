@@ -22,7 +22,7 @@ tests.split("\n").each do |uid|
     next if compid == uid
     users[compid].each do |repoid|
       common[repoid] ||= 0
-      common[repoid] += 1
+      common[repoid] += usermap[uid].size / ((usermap[uid] & usermap[compid]).size + 1)
       next if project_lang_map[repoid].nil? or user_lang_map[uid].nil?
       project_lang_map[repoid].each_pair do |language, lines|
         begin
@@ -32,12 +32,11 @@ tests.split("\n").each do |uid|
           puts language.inspect
           exit(0)
         end
-        common[repoid] += (user_lang_map[uid][language].to_i + 1) / (lines.to_i + 1)
+        common[repoid] += (lines.to_i) / (user_lang_map[uid][language].to_i + 1)
       end
     end
   end
-  
-  friends = common.sort { |a, b| a[1] <=> b[1] }.reverse[0, 10]  
+  friends = common.sort { |a, b| a[1] <=> b[1] }.reverse[0, 10]
   friends = friends.map { |a| a[0] }
   guesses[uid] = friends
   
