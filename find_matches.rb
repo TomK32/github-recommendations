@@ -22,6 +22,7 @@ tests.split("\n").each do |uid|
     next if compid == uid
     users[compid].each do |repoid|
       common[repoid] ||= 0
+      # higher score if both users share a lot of projects
       common[repoid] += usermap[uid].size / ((usermap[uid] & usermap[compid]).size + 1)
       next if project_lang_map[repoid].nil? or user_lang_map[uid].nil?
       project_lang_map[repoid].each_pair do |language, lines|
@@ -32,11 +33,14 @@ tests.split("\n").each do |uid|
           puts language.inspect
           exit(0)
         end
-        common[repoid] += (lines.to_i) / (user_lang_map[uid][language].to_i + 1)
+        # high score if the repo and user share lots of LOC and the user doesn't watch many repos
+        common[repoid] += usermap[uid].size / ((lines.to_i) / (user_lang_map[uid][language].to_i + 1) + 1)
       end
+      
     end
   end
   friends = common.sort { |a, b| a[1] <=> b[1] }.reverse[0, 10]
+  puts y friends
   friends = friends.map { |a| a[0] }
   guesses[uid] = friends
   
