@@ -1,8 +1,8 @@
 require 'common'
 
-tests = File.read('test.txt')
+tests = File.read('test.txt', 100)
 (users, repos) = get_users_repos
-usermap = read_outfile('usermap.txt', 1000)
+usermap = read_outfile('usermap.txt')
 user_lang_map = read_outfile('user_lang_map.txt')
 project_lang_map = read_outfile('lang.txt')
 
@@ -36,7 +36,7 @@ tests.split("\n").each do |uid|
       end
     end
   end
-
+  
   friends = common.sort { |a, b| a[1] <=> b[1] }.reverse[0, 10]  
   friends = friends.map { |a| a[0] }
   guesses[uid] = friends
