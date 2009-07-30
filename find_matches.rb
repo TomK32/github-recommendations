@@ -32,7 +32,11 @@ tests.split("\n").each do |uid|
   end
   project_lang_map.each do |repoid, languages|
     common[repoid] ||= 0
-    common[repoid] += (user_lang_map[uid].keys & languages.keys).size
+    langs_in_common = (user_lang_map[uid].keys & languages.keys).size
+    (user_lang_map[uid].keys & languages.keys).each do |lang|
+      langs_in_common = langs_in_common * (languages[lang].to_i / (user_lang_map[uid][lang].to_i + 1))
+    end
+    common[repoid] += langs_in_common
 #    languages.each_pair do |language, lines|
 #      begin
 #        next if user_lang_map[uid].empty? or user_lang_map[uid][language].nil?
